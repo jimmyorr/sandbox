@@ -1,5 +1,7 @@
 import itertools
 import numpy
+import unittest
+
 
 # Brute force: compare every pair.
 # O(n^2)
@@ -10,11 +12,13 @@ def has_sum1a(array, target):
         return True
   return False
 
-def has_sum1b(array, target, f=lambda x, y: x + y):
+
+def has_sum1b(array, target):
   for combination in itertools.combinations(array, 2):
     if combination[0] + combination[1] == target:
       return True
   return False
+
 
 # Sort and binary search for complement.
 # O(n log n) + (O(n) * O(log n)) = O(n log n)
@@ -31,6 +35,7 @@ def has_sum2(array, target):
     if is_found:
       return True
   return False
+
 
 # Build hashmap of values to count of occurences, then iterate over values
 # and check for each's complement.
@@ -51,6 +56,7 @@ def has_sum3(array, target):
       return True
   return False
 
+
 # Iterate over values, maintaining a set of seen values and checking for each
 # value's complement as you go.
 # O(n) * O(1) = O(n)
@@ -64,26 +70,33 @@ def has_sum4(array, target):
       seen.add(aa)
   return False
 
-def main():
-  for has_sum in [has_sum1a, has_sum1b, has_sum2, has_sum3, has_sum4]:
-    print has_sum.__name__,
 
-    array = [3, 0, 1, 2, 3, 10, 3, -1]
+class ArraySumsTestCase(unittest.TestCase):
+  def run_test(self, array, target, expected):
+    for has_sum in [has_sum1a, has_sum1b, has_sum2, has_sum3, has_sum4]:
+      assert has_sum(array, target) == expected
 
-    # verify 'normal' case
-    assert has_sum(array, 5) == True
-    # verify 3 is counted twice (for 6)
-    assert has_sum(array, 6) == True
-    # verify 10 is not counted twice
-    assert has_sum(array, 20) == False
-    # verify empty set returns false
-    assert has_sum([], 1) == False
-    # verify negatives are considered
-    assert has_sum(array, 9) == True
-    # verify zero is handled
-    assert has_sum(array, 0) == True
+  def test_standard(self):
+    self.run_test([1, 2, 3], 5, True)
 
-    print 'OK'
+  def test_double(self):
+    self.run_test([1, 3, 3], 6, True)
 
-if __name__ == "__main__":
-    main()
+  def test_no_double(self):
+    self.run_test([1, 2, 10], 20, False)
+
+  def test_empty(self):
+    self.run_test([], 1, False)
+
+  def test_negatives(self):
+    self.run_test([-1, 1, 10], 9, True)
+
+  def test_unsorted_input(self):
+    self.run_test([5, 4, 3, 2, 1], 9, True)
+
+  def test_zero(self):
+    self.run_test([-2, 2, 3], 0, True)
+
+
+if __name__ == '__main__':
+  unittest.main()
