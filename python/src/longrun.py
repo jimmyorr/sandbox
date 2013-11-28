@@ -1,10 +1,11 @@
 import unittest
 
+
 def longest_run(iterable):
   """
   Takes an iterable and returns the item in that iterable with the longest
   consecutive run. If iterable is empty, return None.
-  
+
   Example: "aabbbaa", returns 'b' (longest run of 3).
   """
   previous = None
@@ -57,6 +58,7 @@ class LongestRunTestCase(unittest.TestCase):
 
   def test_list(self):
     self.assertEquals(longest_run([1, 2, 2, 3]), 2)
+
 
 if __name__ == '__main__':
   unittest.main()
